@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "\n# This is the server logic for a Shiny web application.\n# You can find out more about building applications with Shiny here:\n#\n# http://shiny.rstudio.com\n#\n\nlibrary(shiny)\nlibrary(ggplot2)\nlibrary(reshape2)\nlibrary(scales)\n\nshinyServer(function(input, output) {\n  \n  ## Calculate payment\n  pay <- function(principal, interest, duration) {\n    \n    r <- (interest / 12)/100\n    d <- duration * 12\n    \n    payment <- principal * r / ( 1 - ( 1 + r)^-d)\n    res <- list(r=r, payment=payment, principal=principal)\n    return(res)\n  }\n  \n  ##Calculate payment after subtracting annual saving\n  df <- function(principal, interest, duration, annualSaving, lifespan) {\n    payYear <- pay(principal, interest, duration)$payment * 12\n    df_data_yr <- data.frame(year = seq(0, lifespan))\n    \n    df_data_yr$wasted <- 0\n    df_data_yr$wasted[(df_data_yr$year) == 0 ] <- annualSaving\n    \n    df_data_yr$payment <- 0\n    df_data_yr$payment[(df_data_yr$year) > 0 & (df_data_yr$year) <= duration] <- payYear\n    \n    df_data_yr$saved <- 0\n  \n    if ((annualSaving - payYear)>=0){\n      df_data_yr$saved[(df_data_yr$year) > 0 & (df_data_yr$year) <= duration] <- annualSaving - payYear\n      df_data_yr$saved[(df_data_yr$year) > duration & (df_data_yr$year) <= lifespan] <- annualSaving\n    }\n    else{\n      df_data_yr$saved[(df_data_yr$year) > duration & (df_data_yr$year) <= lifespan] <- annualSaving\n    }\n    return(df_data_yr)\n  }\n\n  output$payPlot <- renderPlot({\n\n   dat <- df (input$projCosts,\n              input$intRate,\n              input$leaseTerm,\n              input$annualSavings,\n              input$equpmentLife) \n   \n   redat <- melt(dat, id.vars = \"year\", variable.name = \"type\", value.name = \"amount\")\n   \n   ggplot(data = redat, mapping = aes(x=year, y=amount, fill=type)) +\n     coord_cartesian(xlim = c(0, 10)) +\n     scale_x_discrete(breaks = c(\"0\", \"1\", \"2\", \"3\", \"4\", \"5\", \"6\", \"7\", \"8\", \"9\", \"10\"))+\n     scale_y_continuous(labels = comma)+\n     geom_bar(stat=\"identity\") +\n     scale_fill_manual(values = c(\"red\", \"blue\", \"green\")) \n  \n  })\n  \n  output$savingsSummary  <- renderPrint({\n    \n    dat <- df (input$projCosts,\n               input$intRate,\n               input$leaseTerm,\n               input$annualSavings,\n               input$equpmentLife) \n    \n    paymnt <- pay(input$projCosts,\n                  input$intRate,\n                  input$leaseTerm)\n    \n    cat(\"Lifecycle Savings: $\")\n    cat(sum(dat$saved))\n    \n    cat(\"\\nMontly Savings: $\")\n    cat(input$annualSavings/12)\n    \n    cat(\"\\nMonthly Cashflow: $\")\n    cat(input$annualSavings/12 - paymnt$payment)\n    cat(\" (during lease term)\")\n    \n  })\n  \n  output$paymentsSummary  <- renderPrint({\n    \n    dat <- df (input$projCosts,\n               input$intRate,\n               input$leaseTerm,\n               input$annualSavings,\n               input$equpmentLife) \n    \n    paymnt <- pay(input$projCosts,\n                  input$intRate,\n                  input$leaseTerm)\n    \n    cat(\"Lease Term: \")\n    cat(input$leaseTerm)\n    cat(\" years\")\n    \n    cat(\"\\nMontly Payment: $\")\n    cat(paymnt$payment)\n    \n    cat(\"\\nDown Payment: 0$\")\n    \n  })\n  \n  output$payTable <- renderDataTable({\n    \n    dat <- df (input$projCosts,\n               input$intRate,\n               input$leaseTerm,\n               input$annualSavings,\n               input$equpmentLife) \n    \n  })\n\n})\n",
+    "created" : 1455423278520.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2938147388",
+    "id" : "8792DC7F",
+    "lastKnownWriteTime" : 1455512371,
+    "last_content_update" : 1455512371780,
+    "path" : "~/Coursera/DataScienceSpec/DataProducts/Energy_Efficiency_Calculator/Energy_Efficiency_Calculator/server.R",
+    "project_path" : "server.R",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "\n# This is the user-interface definition of the Energy Effeicincy Calculator Shiny web application.\n# You can find out more about using the application here:\n#\n# http://shiny.rstudio.com\n#\n\nlibrary(shiny)\n\nshinyUI(fluidPage(\n\n  \n  # Application title\n  titlePanel(\"Energy Efficiency Calculator\"),\n\n  # Sidebar with a slider input for number of bins\n  sidebarLayout(\n    sidebarPanel(\n      numericInput(\"projCosts\", label = h3(\"Project Costs\"), value = 250000),\n      numericInput(\"annualSavings\", label = h3(\"Annual Savings\"), value = 75000),\n      numericInput(\"equpmentLife\", label = h3(\"Equipment Life\"), value = 10),\n      sliderInput(\"leaseTerm\",\n                  label = h3(\"Lease Term\"),\n                  min = 1,\n                  max = 10,\n                  value = 4),\n      sliderInput(\"intRate\",\n                  label = h3(\"Interest Rate\"),\n                  min = 1,\n                  max = 8,\n                  value = 5,\n                  post = \"%\",\n                  step = 0.01)\n    ),\n\n    # Show a plot of the generated distribution\n    mainPanel(\n      tabsetPanel(\n        tabPanel(\"Results\",\n                 h4(\"Saving over 10 years\"),\n                 plotOutput(\"payPlot\"),\n                 h4(\"Savings Summary\"),\n                 verbatimTextOutput(\"savingsSummary\"),\n                 h4(\"Payments Summary\"),\n                 verbatimTextOutput(\"paymentsSummary\"),\n                 dataTableOutput(\"payTable\")),\n        tabPanel(\"Help\", \n                 h4 (\"How to use Energy Efficiency Calculator\"),\n                 p(\"1) Enter your estimation for the cost of a given Energy Effeiciency project.\"),\n                 p (\"Example: Project Costs = $250 000\"),\n                 p(\"2) Enter your estimation for the annual savings that the Energy Efficiency project will deliver.\"),\n                 p (\"Example: Annual Savings = $75 000\"),\n                 p(\"3) Enter your estimation for the lifespan the Energy Efficiency equipment, during which it will deliver the expected results.\"),\n                 p (\"Example: Equipment Life = 10 years\"),\n                 p(\"4) Choose a lease term and interest rate in order to check your options to borrow capital for your Energy Efficiency project.\"),\n                 p (\"Example: Lease Term = 4 years; Interest Rate = 5%\"),\n                 p(\"5) Analyze results with the help of a chart and table\"),\n                 p(\"For the given example generated saving for the life of the Energy Efficinecy project is $473 648.5 and it is cash flow positive, taking into account the cost of borrowed capital\"),\n                 p(\"Monthly Cashflow = $492.68 (during the lease term)\")\n                 )\n      )\n      \n    )\n  )\n))\n",
+    "created" : 1455423278278.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "748660043",
+    "id" : "34B03EBD",
+    "lastKnownWriteTime" : 1455512408,
+    "last_content_update" : 1455512408306,
+    "path" : "~/Coursera/DataScienceSpec/DataProducts/Energy_Efficiency_Calculator/Energy_Efficiency_Calculator/ui.R",
+    "project_path" : "ui.R",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
